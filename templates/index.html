@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>AutoComplete</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">  
+    </script>  
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">  
+    </script>  
+    
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+        rel="stylesheet" type="text/css" /> 
+    
+        
+</head>
+<body>
+    <header></header>
+    <h1>Welcome to LongestCommonPhrase</h1>
+    <p> By Henry Sanford</p>
+    <p> Find the longest common phrase between any two texts from Project Gutenberg.</p>
+    <form action="" method="POST">
+      <input type="text" id="tags", name = "text 1">
+      <input type = "text" id = "tags2", name = "text 2">
+      <input type = "submit" value = "Enter">
+    </form>
+
+    <h2> {{subseq}}</h2>
+    <p> {{a_context}}</p>
+    <p> {{b_context}}</p>
+    
+    <script>
+  $( function() {
+    var availableTags = [
+        {% for title in titles %}
+            "{{title}}",
+        {% endfor %}
+    ];
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+
+    $( "#tags2" ).autocomplete({
+      source: availableTags
+    });
+
+  } );
+  </script>
+    
+</body>
+</html>
