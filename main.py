@@ -14,14 +14,16 @@ def index():
                                selections = user_selections)
     if request.method == "POST":
         user_selections = request.form
-        subseq, a_context, b_context = lcs.get_lcs(
+        subseq, a_leading_context, a_trailing_context, b_leading_context, b_trailing_context = lcs.get_lcs(
             a_title=user_selections['text 1'], 
             b_title=user_selections['text 2'])
         return render_template("index.html", 
             titles = titles, 
             subseq = subseq,
-            a_context = a_context,
-            b_context = b_context)
+            a_leading_context = a_leading_context,
+            a_trailing_context = a_trailing_context,
+            b_leading_context = b_leading_context,
+            b_trailing_context = b_trailing_context)
 
 # Start the dev server when the script is executed from the command line
 if __name__ == "__main__":

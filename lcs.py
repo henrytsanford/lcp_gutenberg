@@ -92,9 +92,11 @@ def get_lcs(a_title, b_title):
     subseq, a_index, b_index = lcs(a = a, b = b)
     underline_start = r"<u>"
     underline_end = r"<\u>"
-    a_context = a[a_index - CONTEXT_LENGTH: a_index] + underline_start + subseq + underline_end + a[a_index + len(subseq): a_index + len(subseq) + CONTEXT_LENGTH]
-    b_context = b[b_index - CONTEXT_LENGTH: b_index + CONTEXT_LENGTH]
-    return subseq, a_context, b_context
+    a_leading_context = a[a_index - CONTEXT_LENGTH: a_index]
+    a_trailing_context = a[a_index + len(subseq): a_index + len(subseq) + CONTEXT_LENGTH]
+    b_leading_context = b[b_index - CONTEXT_LENGTH: b_index]
+    b_trailing_context = b[b_index + len(subseq): b_index + len(subseq) + CONTEXT_LENGTH]
+    return subseq, a_leading_context, a_trailing_context, b_leading_context, b_trailing_context
 
 def clean_text(id):
     """Given the ID# of a text, return the text without headers."""

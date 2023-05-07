@@ -22,7 +22,7 @@ body {
   }
 
   h2 {
-    font-size: 3em;
+    font-size: 4em;
     margin-top: 40px;
     text-align: center;
     letter-spacing: -2px;
@@ -35,8 +35,8 @@ body {
     justify-content: space-between;
     inline-size: 60%;
     margin: auto;
-    font-size: 3em;
-    gap: 20px;
+    font-size: 2em;
+    gap: 50px;
     box-shadow: #444;
   }
   .context {
