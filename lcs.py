@@ -1,14 +1,12 @@
-# Issues: Blank sequence bug
-# Need function for subseq given indices
-
 import collections
-import numpy
-import gutenbergpy
-import pandas as pd
-import gutenbergpy.textget
-import gutenbergpy.gutenbergcachesettings
-from gutenbergpy.gutenbergcachesettings import GutenbergCacheSettings
 import tempfile
+import numpy
+import pandas as pd
+from gutenbergpy import textget
+from gutenbergpy.gutenbergcachesettings import GutenbergCacheSettings
+
+CONTEXT_LENGTH = 100
+DEFAULT_CACHE_DIR = "tmp"
 
 def sort_bucket(s, bucket, order):
     d = collections.defaultdict(list) 
@@ -50,13 +48,11 @@ def lcs(a, b):
     s = a + null_char + b
     a_range = list(range(0, len(a)))
     sa = suffix_array_ManberMyers(s)
-    print("making lcp")
     lcp = lcp_array(s, sa)
     sorted = numpy.argsort(lcp)[::-1]
 
     print("finding duplicates")
 
-    # TODO Instead of searching the array, use a range comparison
     for ele in sorted:
         x = sa[ele]
         y = sa[ele + 1]
@@ -65,9 +61,6 @@ def lcs(a, b):
                 (x > len(a) and y < len(a))):
             ls_index = ele
             break
-#        if not ((x in a_range and y in a_range) or 
-#                (x not in a_range and y not in a_range)):
-#            ls_index = ele 
 
     n = sa[ls_index] 
     n_b = sa[ls_index + 1] #adjacent to the other suffix
@@ -91,24 +84,26 @@ def lcs(a, b):
     b_index = b_index - len(a) - len(null_char)
     return subseq, a_index, b_index
 
-def get_lcs(a_code, b_code):
+def get_lcs(a_title, b_title):
+    a_code = get_ID(a_title)
+    b_code = get_ID(b_title)
     a = clean_text(a_code) 
     b = clean_text(b_code) 
-    print("texts cleaned")
     subseq, a_index, b_index = lcs(a = a, b = b)
-    print(subseq)
-    a_context = a[a_index - 100: a_index + 100]
-    b_context = b[b_index - 100: b_index + 100]
+    a_context = a[a_index - CONTEXT_LENGTH: a_index + CONTEXT_LENGTH]
+    b_context = b[b_index - CONTEXT_LENGTH: b_index + CONTEXT_LENGTH]
     return subseq, a_context, b_context
 
 def clean_text(id):
+    """Given the ID# of a text, return the text without headers."""
     update_cache_settings()
-    # This gets a book by its gutenberg id number
-    raw_book = gutenbergpy.textget.get_text_by_id(id) # with headers
-    clean_book = gutenbergpy.textget.strip_headers(raw_book) # without headers
+    raw_book = textget.get_text_by_id(id) # with headers
+    clean_book = textget.strip_headers(raw_book) # without headers
     return clean_book.decode()
 
 def get_ID(title):
+    """Given the title of a text, retrieve its corresponding Project
+    Gutenberg ID#. Return 0 if title is not found."""
     pg_catalog = retrieve_metadata()
     query = pg_catalog.query("cleaned_title==@title")
     if(len(query) > 0):
@@ -117,17 +112,22 @@ def get_ID(title):
         return 0 #Title is not in catalog
     
 def retrieve_metadata():
+    """Returns a dataframe with information about title, author, and ID#
+    of every text on Project Gutenberg"""
     return pd.read_csv("pg_catalog_cleaned.csv", low_memory=False)
 
-def update_cache_settings():
+def retrieve_titles():
+    """Returns a list of the title of every text on Project Gutenberg"""
+    pg_catalog = retrieve_metadata()
+    return pg_catalog.cleaned_title.to_list()
 
-    # Need to write our cache to a temporary directory because everything else is
-    # read only on google
-    # The other solution is to download every text: TODO
+def update_cache_settings():
+    """The text file cache must be written a temporary directory because
+      everything else is read only on Google Cloud. In the future, consider
+      downloading all the compressed texts before deploying."""
     tempdir = tempfile.tempdir
-    print(tempdir)
     if tempdir is None:
-        print("couldn't find tempdir")
-        tempdir = "tmp"
-    GutenbergCacheSettings.set(TextFilesCacheFolder=tempdir, CacheUnpackDir=tempdir)
+        tempdir = DEFAULT_CACHE_DIR
+    GutenbergCacheSettings.set(TextFilesCacheFolder=tempdir, 
+                               CacheUnpackDir=tempdir)
 
