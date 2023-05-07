@@ -2,9 +2,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <html>
 <head>
+    <title>LCP_Gutenberg</title>
+    <link rel="icon" type="image/jpg" href="../images/favicon.jpg"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <title>AutoComplete</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">  
     </script>  
     
@@ -26,11 +27,15 @@
       <input type = "text" id = "tags2", name = "text 2">
       <input type = "submit" value = "Enter">
     </form>
-
-    <h2> {{subseq}}</h2>
-    <p> {{a_context}}</p>
-    <p> {{b_context}}</p>
     
+    <h2> {{subseq}}</h2>
+
+    <div class="box", id = "context_box">
+        <article class = "context">{{a_context}}</article>
+        <article class = "context">{{b_context}}</article>
+    </div>
+
+      
     <script>
   $( function() {
     var availableTags = [

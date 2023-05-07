@@ -5,7 +5,7 @@ import pandas as pd
 from gutenbergpy import textget
 from gutenbergpy.gutenbergcachesettings import GutenbergCacheSettings
 
-CONTEXT_LENGTH = 100
+CONTEXT_LENGTH = 200
 DEFAULT_CACHE_DIR = "tmp"
 
 def sort_bucket(s, bucket, order):
@@ -90,7 +90,9 @@ def get_lcs(a_title, b_title):
     a = clean_text(a_code) 
     b = clean_text(b_code) 
     subseq, a_index, b_index = lcs(a = a, b = b)
-    a_context = a[a_index - CONTEXT_LENGTH: a_index + CONTEXT_LENGTH]
+    underline_start = r"<u>"
+    underline_end = r"<\u>"
+    a_context = a[a_index - CONTEXT_LENGTH: a_index] + underline_start + subseq + underline_end + a[a_index + len(subseq): a_index + len(subseq) + CONTEXT_LENGTH]
     b_context = b[b_index - CONTEXT_LENGTH: b_index + CONTEXT_LENGTH]
     return subseq, a_context, b_context
 
