@@ -19,25 +19,25 @@
 </head>
 <body>
     <header></header>
-    <h1>Welcome to LongestCommonPhrase</h1>
+    <h1>LCP_Gutenberg</h1>
     <p> By Henry Sanford</p>
-    <p> Find the longest common phrase between any two texts from Project Gutenberg.</p>
+    <p> Find the longest common phrase between any two texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a>.</p>
     <form action="" method="POST">
-      <input type="text" id="tags", name = "text 1">
-      <input type = "text" id = "tags2", name = "text 2">
-      <input type = "submit" value = "Enter">
+      <input type="text" id="tags", name = "text 1", value="{{a_title}}">
+      <input type = "text" id = "tags2", name = "text 2", value="{{b_title}}">
+      <input type = "submit" value = "Submit">
     </form>
     
     <h2> {{subseq}}</h2>
 
     <div class="box", id = "context_box">
-        <article class = "context">...{{a_leading_context}}<u>{{subseq}}</u>{{a_trailing_context}}...</article>
-        <article class = "context">...{{b_leading_context}}<u>{{subseq}}</u>{{b_trailing_context}}...</article>
+        <article class = "context">{{a_leading_context}}<b><u>{{subseq}}</u></b>{{a_trailing_context}}</article>
+        <article class = "context">{{b_leading_context}}<b><u>{{subseq}}</u></b>{{b_trailing_context}}</article>
     </div>
 
       
     <script>
-  $( function() {
+/*   $( function() {
     var availableTags = [
         {% for title in titles %}
             "{{title}}",
@@ -49,6 +49,28 @@
 
     $( "#tags2" ).autocomplete({
       source: availableTags
+    }); */
+    $( function() {
+    var availableTags = [
+        {% for title in titles %}
+            "{{title}}",
+        {% endfor %}
+    ];
+    $( "#tags" ).autocomplete({
+      source: function(request, response) {
+        var results = $.ui.autocomplete.filter(availableTags, request.term);
+
+        response(results.slice(0, 10));
+    }
+
+    });
+    $( "#tags2" ).autocomplete({
+      source: function(request, response) {
+        var results = $.ui.autocomplete.filter(availableTags, request.term);
+
+        response(results.slice(0, 10));
+    }
+
     });
 
   } );
