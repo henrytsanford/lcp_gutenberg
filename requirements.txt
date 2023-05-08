@@ -2,3 +2,4 @@ Flask==2.1.2
 gutenbergpy==0.3.5
 numpy==1.24.0
 pandas==2.0.1
+gunicorn==20.1.0
