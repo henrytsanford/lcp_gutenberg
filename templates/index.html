@@ -35,29 +35,24 @@
         <article class = "context">{{b_leading_context}}<b><u>{{subseq}}</u></b>{{b_trailing_context}}</article>
     </div>
 
-      
     <script>
     $( function() {
-    var availableTags = [
-        {% for title in titles %}
-            "{{title}}",
-        {% endfor %}
-    ];
+    var availableTags = {{titles|tojson|safe}}
+    //availableTags = encodeURIComponent(JSON.stringify(availableTags))
     $( "#tags" ).autocomplete({
       source: function(request, response) {
         var results = $.ui.autocomplete.filter(availableTags, request.term);
 
         response(results.slice(0, 10));
-    }
-
+      }
     });
+
     $( "#tags2" ).autocomplete({
       source: function(request, response) {
         var results = $.ui.autocomplete.filter(availableTags, request.term);
 
         response(results.slice(0, 10));
-    }
-
+      }
     });
 
   } );

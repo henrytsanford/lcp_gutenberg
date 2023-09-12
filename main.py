@@ -5,9 +5,9 @@ app = Flask(__name__)
 
 @app.route("/", methods =["POST","GET"])
 def index():
-    lcs.update_cache_settings()
+    lcs.update_cache_settings() # Set cache to a temp dir
     user_selections = {}
-    titles = lcs.retrieve_titles()
+    titles = lcs.retrieve_titles() 
     if request.method == "GET":
         return render_template("index.html", 
                                titles=titles, 

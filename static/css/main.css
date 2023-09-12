@@ -63,6 +63,12 @@ body {
   }
   .ui-autocomplete{
     text-align: left;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: default;
+    background-color:#ffffff;
+    border: 1px solid #aaaaaa;
   }
 
   img {

@@ -1,57 +1,22 @@
-import collections
 import tempfile
 import numpy
 import pandas as pd
+import algorithm
 from gutenbergpy import textget
 from gutenbergpy.gutenbergcachesettings import GutenbergCacheSettings
 
 CONTEXT_LENGTH = 300
 DEFAULT_CACHE_DIR = "tmp"
 
-def sort_bucket(s, bucket, order):
-    d = collections.defaultdict(list) 
-    for i in bucket: 
-        key = s[i:i+order] 
-        d[key].append(i) 
-    result = [] 
-    for k,v in sorted(d.items()): 
-        if len(v) > 1: 
-            result += sort_bucket(s, v, order*2) 
-        else: 
-            result.append(v[0]) 
-    return result 
-
-def suffix_array_ManberMyers(s): 
-    return sort_bucket(s, (i for i in range(len(s))), 1)
-    
-def lcp_array(s, sa):
-    n = len(s)
-    k = 0
-    lcp = [0] * n
-    rank = [0] * n
-    for i in range(n):
-        rank[sa[i]] = i
-    for i in range(n):
-        if rank[i] == n-1:
-            k = 0
-            continue
-        j = sa[rank[i] + 1]
-        while i + k < n and j + k < n and s[i + k] == s[j + k]:
-            k += 1
-        lcp[rank[i]] = k
-        if k:
-            k -= 1
-    return lcp
 
 def lcs(a, b):
+    """Return the longest common subsequence, and its index in both texts"""
     null_char = '\0'
     s = a + null_char + b
     a_range = list(range(0, len(a)))
-    sa = suffix_array_ManberMyers(s)
-    lcp = lcp_array(s, sa)
+    sa = algorithm.suffix_array_ManberMyers(s)
+    lcp = algorithm.lcp_array(s, sa)
     sorted = numpy.argsort(lcp)[::-1]
-
-    print("finding duplicates")
 
     for ele in sorted:
         x = sa[ele]
@@ -85,6 +50,9 @@ def lcs(a, b):
     return subseq, a_index, b_index
 
 def get_lcs(a_title, b_title):
+    """Given two titles in the gutenberg database,
+    return the longest common subsequence, and the surrounding context
+    for both texts"""
     a_code = get_ID(a_title)
     b_code = get_ID(b_title)
     a = clean_text(a_code) 
