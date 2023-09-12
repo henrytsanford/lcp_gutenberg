@@ -69,6 +69,7 @@ body {
     cursor: default;
     background-color:#ffffff;
     border: 1px solid #aaaaaa;
+    list-style: none;
   }
   .ui-menu-item > a.ui-corner-all {
     display: block;
