@@ -10,16 +10,16 @@ CONTEXT_LENGTH = 300 # Number of characters on each side of LCP
 
 
 def lcs(a, b):
-    """Given two strings,
-    return the longest common subsequence, and its index in both strings"""
+    """Given two strings, return the longest common subsequence, and its index 
+    in both strings"""
     null_char = '\0'
     s = a + null_char + b
-    a_range = list(range(0, len(a)))
     sa = manber_myers.suffix_array_ManberMyers(s)
     lcp = manber_myers.lcp_array(s, sa)
-    sorted = numpy.argsort(lcp)[::-1]
+    sorted_lcp = numpy.argsort(lcp)[::-1]
+    a_range = list(range(0, len(a)))
 
-    for ele in sorted:
+    for ele in sorted_lcp:
         x = sa[ele]
         y = sa[ele + 1]
         # is this suffix is in both texts?
@@ -56,17 +56,22 @@ def get_lcs(a_title, b_title):
     for both texts"""
     a_code = get_ID(a_title)
     b_code = get_ID(b_title)
-    a = clean_text(a_code) 
-    b = clean_text(b_code) 
-    subseq, a_index, b_index = lcs(a = a, b = b)
-    ellipsis = "..."
-    a_leading_context = ellipsis + a[a_index - CONTEXT_LENGTH: a_index]
-    a_trailing_context = a[a_index + len(subseq): a_index + 
-                           len(subseq) + CONTEXT_LENGTH] + ellipsis
-    b_leading_context = ellipsis + b[b_index - CONTEXT_LENGTH: b_index]
-    b_trailing_context = b[b_index + 
-                           len(subseq): b_index + len(subseq) + CONTEXT_LENGTH] + ellipsis
-    return subseq, a_leading_context, a_trailing_context, b_leading_context, b_trailing_context
+    if(a_code != 0 and b_code !=0):
+        a = clean_text(a_code) 
+        b = clean_text(b_code) 
+        subseq, a_index, b_index = lcs(a = a, b = b)
+        ellipsis = "..."
+        a_leading_context = ellipsis + a[a_index - CONTEXT_LENGTH: a_index]
+        a_trailing_context = a[a_index + len(subseq): a_index + 
+                            len(subseq) + CONTEXT_LENGTH] + ellipsis
+        b_leading_context = ellipsis + b[b_index - CONTEXT_LENGTH: b_index]
+        b_trailing_context = b[b_index + 
+                            len(subseq): b_index + len(subseq) + 
+                            CONTEXT_LENGTH] + ellipsis
+        return (subseq, a_leading_context, a_trailing_context, 
+                b_leading_context, b_trailing_context)
+    else:
+        return("Error, invalid title(s)", "", "", "","")
 
 def clean_text(id):
     """Given the ID# of a text, return the text without headers."""
