@@ -1,21 +1,22 @@
 import tempfile
 import numpy
 import pandas as pd
-import algorithm
+import manber_myers
 from gutenbergpy import textget
 from gutenbergpy.gutenbergcachesettings import GutenbergCacheSettings
 
-CONTEXT_LENGTH = 300
-DEFAULT_CACHE_DIR = "tmp"
+DEFAULT_CACHE_DIR = "tmp" # Where to store compressed texts on Google Cloud
+CONTEXT_LENGTH = 300 # Number of characters on each side of LCP
 
 
 def lcs(a, b):
-    """Return the longest common subsequence, and its index in both texts"""
+    """Given two strings,
+    return the longest common subsequence, and its index in both strings"""
     null_char = '\0'
     s = a + null_char + b
     a_range = list(range(0, len(a)))
-    sa = algorithm.suffix_array_ManberMyers(s)
-    lcp = algorithm.lcp_array(s, sa)
+    sa = manber_myers.suffix_array_ManberMyers(s)
+    lcp = manber_myers.lcp_array(s, sa)
     sorted = numpy.argsort(lcp)[::-1]
 
     for ele in sorted:
@@ -51,7 +52,7 @@ def lcs(a, b):
 
 def get_lcs(a_title, b_title):
     """Given two titles in the gutenberg database,
-    return the longest common subsequence, and the surrounding context
+    return the longest common subsequence, and the surrounding context,
     for both texts"""
     a_code = get_ID(a_title)
     b_code = get_ID(b_title)
@@ -92,7 +93,8 @@ def retrieve_metadata():
 def retrieve_titles():
     """Returns a list of the title of every text on Project Gutenberg"""
     pg_catalog = retrieve_metadata()
-    return pg_catalog.cleaned_title.to_list()
+    titles = pg_catalog.cleaned_title.to_list()
+    return titles
 
 def update_cache_settings():
     """The text file cache must be written a temporary directory because
@@ -103,3 +105,5 @@ def update_cache_settings():
         tempdir = DEFAULT_CACHE_DIR
     GutenbergCacheSettings.set(TextFilesCacheFolder=tempdir, 
                                CacheUnpackDir=tempdir)
+    
+    
