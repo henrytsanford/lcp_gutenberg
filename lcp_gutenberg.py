@@ -57,6 +57,22 @@ def lcs(a, b):
     b_index = b_index - len(a) - len(null_char)
     return subseq, a_index, b_index
 
+def build_match_context(a, b):
+    """Given two already-fetched texts, return the longest common
+    subsequence with surrounding context, as (subseq, a_leading_context,
+    a_trailing_context, b_leading_context, b_trailing_context)"""
+    subseq, a_index, b_index = lcs(a = a, b = b)
+    ellipsis = "..."
+    a_leading_context = ellipsis + a[a_index - CONTEXT_LENGTH: a_index]
+    a_trailing_context = a[a_index + len(subseq): a_index +
+                        len(subseq) + CONTEXT_LENGTH] + ellipsis
+    b_leading_context = ellipsis + b[b_index - CONTEXT_LENGTH: b_index]
+    b_trailing_context = b[b_index +
+                        len(subseq): b_index + len(subseq) +
+                        CONTEXT_LENGTH] + ellipsis
+    return (subseq, a_leading_context, a_trailing_context,
+            b_leading_context, b_trailing_context)
+
 def get_lcs(a_title, b_title):
     """Given two titles in the gutenberg database,
     return the longest common subsequence, and the surrounding context,
@@ -64,19 +80,9 @@ def get_lcs(a_title, b_title):
     a_code = get_ID(a_title)
     b_code = get_ID(b_title)
     if(a_code != 0 and b_code !=0):
-        a = clean_text(a_code) 
-        b = clean_text(b_code) 
-        subseq, a_index, b_index = lcs(a = a, b = b)
-        ellipsis = "..."
-        a_leading_context = ellipsis + a[a_index - CONTEXT_LENGTH: a_index]
-        a_trailing_context = a[a_index + len(subseq): a_index + 
-                            len(subseq) + CONTEXT_LENGTH] + ellipsis
-        b_leading_context = ellipsis + b[b_index - CONTEXT_LENGTH: b_index]
-        b_trailing_context = b[b_index + 
-                            len(subseq): b_index + len(subseq) + 
-                            CONTEXT_LENGTH] + ellipsis
-        return (subseq, a_leading_context, a_trailing_context, 
-                b_leading_context, b_trailing_context)
+        a = clean_text(a_code)
+        b = clean_text(b_code)
+        return build_match_context(a, b)
     else:
         return("Error, invalid title(s)", "", "", "","")
 

@@ -265,14 +265,15 @@
 
   var form = document.getElementById("form");
   var submitBtn = document.getElementById("submit");
-  var spinner = document.getElementById("loading");
+  var loadingBar = document.getElementById("loading");
 
   if (form) {
     form.addEventListener("submit", function () {
       submitBtn.disabled = true;
       submitBtn.setAttribute("aria-busy", "true");
       submitBtn.value = "Searching…";
-      spinner.style.display = "inline-block";
+      loadingBar.style.display = "block";
+      loadingBar.removeAttribute("aria-hidden");
     });
   }
 })();

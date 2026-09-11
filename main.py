@@ -1,7 +1,11 @@
+import json
+
 from flask import Flask, request, render_template
 import lcp_gutenberg
 
 app = Flask(__name__)
+
+GALLERY_DATA_PATH = "gallery_data.json"
 
 @app.route("/", methods =["POST","GET"])
 def index():
@@ -28,6 +32,12 @@ def index():
             b_trailing_context = b_trailing_context,
             a_title = a_title,
             b_title = b_title)
+
+@app.route("/gallery")
+def gallery():
+    with open(GALLERY_DATA_PATH, encoding="utf-8") as f:
+        entries = json.load(f)
+    return render_template("gallery.html", entries=entries)
 
 # Start the dev server when the script is executed from the command line
 if __name__ == "__main__":

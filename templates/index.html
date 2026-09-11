@@ -12,6 +12,7 @@
             <h1>LCP_Gutenberg</h1>
             <p class="byline">By Henry Sanford</p>
             <p>Find the longest common phrase between any two texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a>.</p>
+            <nav class="site-nav"><a href="{{ url_for('gallery') }}">Gallery of matches &rarr;</a></nav>
         </header>
 
         <form action="" method="POST" id="form">
@@ -24,7 +25,9 @@
                 <input type="text" id="tags2" name="text 2" value="{{b_title}}" placeholder="Please enter" data-autocomplete>
             </div>
             <input type="submit" value="Submit" id="submit">
-            <img src="{{ url_for('static', filename='loadingimage.gif') }}" id="loading" alt="">
+            <div class="loading-bar" id="loading" role="status" aria-hidden="true">
+                <div class="loading-bar__fill"></div>
+            </div>
         </form>
 
         {% if subseq %}
