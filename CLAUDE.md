@@ -6,8 +6,7 @@ Context for working on LCP_Gutenberg.
 
 Flask app finding the longest common substring between two Project Gutenberg texts.
 User picks two titles from autocomplete; app downloads both texts, computes the LCS
-via a suffix array, shows the phrase with context from each book. Built by Henry
-Sanford, May–Sep 2023.
+via a suffix array, shows the phrase with context from each book.
 
 ## Architecture
 
@@ -26,16 +25,11 @@ python -m venv venv && venv\Scripts\activate
 pip install -r requirements.txt && python main.py   # http://127.0.0.1:8080
 ```
 
-## Deployment status
+## Deployment
 
-Not currently deployed. Target is **Cloud Run** (`T001`): `Dockerfile` (python:3.11-slim) runs
-`gunicorn -c gunicorn_config.py main:app`, reading `$PORT`. `app.yaml` removed (App Engine-specific).
-
-## Known issues
-
-- `T002`: `clean_text()` computes `final_book` but still returns the old `decoded_book`.
-- `T003`: in-progress "watermark" jQuery plugin from a non-HTTPS CDN.
-- `T005`: stray dev artifacts in repo root (notebook, env dump, duplicate favicon).
+Live on **Cloud Run**: `Dockerfile` (python:3.11-slim) runs
+`gunicorn -c gunicorn_config.py main:app`, reading `$PORT`. CI (`.github/workflows/ci.yml`)
+runs pytest and a Docker build on push/PR to `main`.
 
 ## Git & conventions
 
@@ -43,8 +37,9 @@ Not currently deployed. Target is **Cloud Run** (`T001`): `Dockerfile` (python:3
 - Keep diffs minimal: change only what's needed, don't reformat or restructure untouched code.
 - Comments: concise, non-temporal — current behavior only, never "added for X"/"fixed Y"/task
   or issue references.
-- No linter/formatter or CI configured.
+- No linter/formatter configured.
 
 ## Task tracking
 
-Tracked in `TASKS.md` at repo root — check before starting, update as you go.
+Active work in `TASKS.md`, completed history in `TASKS_ARCHIVE.md` (both at repo root) —
+check before starting, update as you go.

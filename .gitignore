@@ -45,3 +45,4 @@ launch.json
 *.pyc
 Package Version.txt
 .pytest_cache/
+TASKS_ARCHIVE.md

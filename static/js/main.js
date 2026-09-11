@@ -18,6 +18,56 @@
     return matches;
   }
 
+  function levenshteinDistance(a, b) {
+    var prevRow = [];
+    for (var j = 0; j <= b.length; j++) {
+      prevRow[j] = j;
+    }
+    for (var i = 1; i <= a.length; i++) {
+      var currRow = [i];
+      for (j = 1; j <= b.length; j++) {
+        var cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+        currRow[j] = Math.min(
+          prevRow[j] + 1,
+          currRow[j - 1] + 1,
+          prevRow[j - 1] + cost
+        );
+      }
+      prevRow = currRow;
+    }
+    return prevRow[b.length];
+  }
+
+  // Compares the query against just the lead of a longer candidate, so a
+  // typo'd/truncated prefix of a long title (e.g. "Declaration of
+  // Independance") isn't penalized for the rest of that title it never
+  // typed, and doesn't lose out to an unrelated short title that happens to
+  // be closer in raw length.
+  function anchoredDistance(q, candidateLower) {
+    var compareTo = candidateLower.length > q.length
+      ? candidateLower.slice(0, q.length)
+      : candidateLower;
+    return levenshteinDistance(q, compareTo);
+  }
+
+  function closestTitle(query) {
+    var q = query.toLowerCase();
+    var candidates = filterTitles(query);
+    if (candidates.length === 0) {
+      candidates = titles;
+    }
+    var best = null;
+    var bestDist = Infinity;
+    for (var i = 0; i < candidates.length; i++) {
+      var dist = anchoredDistance(q, candidates[i].toLowerCase());
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = candidates[i];
+      }
+    }
+    return best;
+  }
+
   function Autocomplete(input) {
     this.input = input;
     this.activeIndex = -1;
@@ -157,12 +207,46 @@
   };
 
   Autocomplete.prototype.onBlur = function () {
-    setTimeout(this.close.bind(this), 100);
+    setTimeout(function () {
+      this.close();
+      var value = this.input.value.trim();
+      if (!value) {
+        return;
+      }
+      var idx = titlesLower.indexOf(value.toLowerCase());
+      if (idx !== -1) {
+        this.input.value = titles[idx];
+        return;
+      }
+      var match = closestTitle(value);
+      if (match) {
+        this.input.value = match;
+      }
+    }.bind(this), 100);
   };
 
   document.querySelectorAll("input[data-autocomplete]").forEach(function (el) {
     new Autocomplete(el);
   });
+
+  (function setRandomPlaceholders() {
+    var box1 = document.getElementById("tags");
+    var box2 = document.getElementById("tags2");
+    if (!box1 || !box2) {
+      return;
+    }
+    var nonEmpty = titles.filter(function (t) { return t; });
+    if (nonEmpty.length < 2) {
+      return;
+    }
+    var i = Math.floor(Math.random() * nonEmpty.length);
+    var j;
+    do {
+      j = Math.floor(Math.random() * nonEmpty.length);
+    } while (j === i);
+    box1.placeholder = nonEmpty[i];
+    box2.placeholder = nonEmpty[j];
+  })();
 
   var form = document.getElementById("form");
   var submitBtn = document.getElementById("submit");
