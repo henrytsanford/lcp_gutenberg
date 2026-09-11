@@ -1,75 +1,54 @@
 <!DOCTYPE html>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>LCP_Gutenberg</title>
-    <link rel="icon" type="image/jpg" href="../images/favicon.jpg"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='favicon.jpg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">  
-    </script>  
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">  
-    </script>  
-    
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
-        rel="stylesheet" type="text/css" /> 
-    
-        
 </head>
 <body>
-    <h1>LCP_Gutenberg</h1>
-    <p> By Henry Sanford</p>
-    <p> Find the longest common phrase between any two texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a>.</p>
-    <form action="" method="POST", id="form">
-      <input type="text" id="tags", name = "text 1", value="{{a_title}}">
-      <input type = "text" id = "tags2", name = "text 2", value="{{b_title}}">
-      <input type = "submit" value = "Submit" onclick="loading();" id = "submit">
-    </form>
-    <img src="static/loadingimage.gif" id ="loading"  style="width:30%;height:30%;"> 
-    
-    <h2> {{subseq}}</h2>
+    <main>
+        <header>
+            <h1>LCP_Gutenberg</h1>
+            <p class="byline">By Henry Sanford</p>
+            <p>Find the longest common phrase between any two texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a>.</p>
+        </header>
 
-    <div class="box", id = "context_box">
-        <article class = "context">{{a_leading_context}}<b><u>{{subseq}}</u></b>{{a_trailing_context}}</article>
-        <article class = "context">{{b_leading_context}}<b><u>{{subseq}}</u></b>{{b_trailing_context}}</article>
-    </div>
+        <form action="" method="POST" id="form">
+            <div class="field">
+                <label for="tags">First book</label>
+                <input type="text" id="tags" name="text 1" value="{{a_title}}" placeholder="Please enter" data-autocomplete>
+            </div>
+            <div class="field">
+                <label for="tags2">Second book</label>
+                <input type="text" id="tags2" name="text 2" value="{{b_title}}" placeholder="Please enter" data-autocomplete>
+            </div>
+            <input type="submit" value="Submit" id="submit">
+            <img src="{{ url_for('static', filename='loadingimage.gif') }}" id="loading" alt="">
+        </form>
 
-    <script>
-    $( function() {
-    var availableTags = {{titles|tojson|safe}}
-    //availableTags = encodeURIComponent(JSON.stringify(availableTags))
-    $( "#tags" ).autocomplete({
-      source: function(request, response) {
-        var results = $.ui.autocomplete.filter(availableTags, request.term);
+        {% if subseq %}
+            {% if subseq == "Error, invalid title(s)" %}
+                <div class="notice notice--error" role="alert">
+                    Couldn't find a match for one or both titles &mdash; check the spelling and try again.
+                </div>
+            {% else %}
+                <h2>&ldquo;{{ subseq }}&rdquo;</h2>
+                <div class="context-grid" id="context_box">
+                    <article class="context-card">
+                        <h3 class="context-card__title">{{ a_title }}</h3>
+                        <p class="context-card__text">{{ a_leading_context }}<mark>{{ subseq }}</mark>{{ a_trailing_context }}</p>
+                    </article>
+                    <article class="context-card">
+                        <h3 class="context-card__title">{{ b_title }}</h3>
+                        <p class="context-card__text">{{ b_leading_context }}<mark>{{ subseq }}</mark>{{ b_trailing_context }}</p>
+                    </article>
+                </div>
+            {% endif %}
+        {% endif %}
+    </main>
 
-        response(results.slice(0, 10));
-      }
-    });
-
-    $( "#tags2" ).autocomplete({
-      source: function(request, response) {
-        var results = $.ui.autocomplete.filter(availableTags, request.term);
-
-        response(results.slice(0, 10));
-      }
-    });
-
-    $(document).ready(function () {
-         $( "#tags" ).watermark('Please enter', { 
-             className: 'lightText' 
-         });
-    });
-
-  } );
-  </script>
-  <script type="text/javascript" src="http://labs.mario.ec/jq-watermark/jquery.watermark.js"></script>
-  <script type="text/javascript">// <![CDATA[
-    function loading(){
-        $("#loading").show();
-        $("#submit").hide();       
-    }
-  // ]]></script>
-    
+    <script type="application/json" id="titles-data">{{ titles|tojson|safe }}</script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </body>
 </html>

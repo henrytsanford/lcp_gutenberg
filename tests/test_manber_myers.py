@@ -1,3 +1,5 @@
+import time
+
 import manber_myers
 
 
@@ -52,3 +54,16 @@ def test_lcp_array_no_repeats_is_all_zero():
     s = "abcdefg"
     sa = manber_myers.suffix_array_ManberMyers(s)
     assert manber_myers.lcp_array(s, sa) == [0] * len(s)
+
+
+def test_suffix_array_matches_brute_force_all_repeated_chars():
+    s = "a" * 200
+    assert manber_myers.suffix_array_ManberMyers(s) == brute_force_suffix_array(s)
+
+
+def test_suffix_array_performance_on_large_repeated_input():
+    s = "a" * 20000
+    start = time.perf_counter()
+    manber_myers.suffix_array_ManberMyers(s)
+    elapsed = time.perf_counter() - start
+    assert elapsed < 3.0

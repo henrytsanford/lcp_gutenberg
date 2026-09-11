@@ -1,26 +1,48 @@
-"""These functions are adapted from prasoon2211
+"""lcp_array() is adapted from prasoon2211
 https://gist.github.com/prasoon2211/cc3f3d5b43a0885c0e7a"""
 
-import collections
-
-def sort_bucket(s, bucket, order):
-    """Recursively sort the suffix array"""
-    d = collections.defaultdict(list) 
-    for i in bucket: 
-        key = s[i:i+order] 
-        d[key].append(i) 
-    result = [] 
-    for k,v in sorted(d.items()): 
-        if len(v) > 1: 
-            result += sort_bucket(s, v, order*2) 
-        else: 
-            result.append(v[0]) 
-    return result 
+import numpy
+import polars
 
 def suffix_array_ManberMyers(s):
-    """Construct a suffix array given a string""" 
-    return sort_bucket(s, (i for i in range(len(s))), 1)
-    
+    """Construct a suffix array given a string, via prefix doubling: each
+    round sorts suffixes by their (current rank, rank of the suffix k
+    characters ahead) pair and refines ranks from that order, doubling k
+    until every suffix has a distinct rank."""
+    n = len(s)
+    if n == 0:
+        return []
+    if n == 1:
+        return [0]
+
+    rank = numpy.array([ord(c) for c in s])
+    idx = numpy.arange(n)
+    k = 1
+    while True:
+        key2 = numpy.full(n, -1, dtype=rank.dtype)
+        if k < n:
+            key2[:n - k] = rank[k:]
+
+        order = (
+            polars.DataFrame({"idx": idx, "r1": rank, "r2": key2})
+            .sort(["r1", "r2"])["idx"]
+            .to_numpy()
+        )
+
+        sorted_r1 = rank[order]
+        sorted_r2 = key2[order]
+        boundary = numpy.empty(n, dtype=bool)
+        boundary[0] = False
+        boundary[1:] = (sorted_r1[1:] != sorted_r1[:-1]) | (sorted_r2[1:] != sorted_r2[:-1])
+        new_rank_sorted = numpy.cumsum(boundary)
+
+        if new_rank_sorted[-1] == n - 1:
+            return order.tolist()
+
+        rank = numpy.empty(n, dtype=rank.dtype)
+        rank[order] = new_rank_sorted
+        k *= 2
+
 def lcp_array(s, sa):
     """Construct a longest common prefix array"""
     n = len(s)

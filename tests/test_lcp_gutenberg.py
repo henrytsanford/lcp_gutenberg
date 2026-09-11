@@ -1,5 +1,3 @@
-import pytest
-
 import lcp_gutenberg as lg
 
 
@@ -23,14 +21,16 @@ def test_lcs_finds_shared_phrase_with_spaces():
     assert b[b_index:b_index + len(subseq)] == subseq
 
 
-@pytest.mark.xfail(
-    raises=IndexError,
-    reason="lcs() assumes some common substring exists; texts with zero shared "
-           "characters crash instead of returning an empty match (T008)",
-)
 def test_lcs_no_overlap_returns_empty():
     subseq, a_index, b_index = lg.lcs("abc", "xyz")
     assert subseq == ""
+    assert 0 <= a_index <= 3
+    assert 0 <= b_index <= 3
+
+
+def test_lcs_empty_input_returns_empty():
+    assert lg.lcs("", "abc") == ("", 0, 0)
+    assert lg.lcs("abc", "") == ("", 0, 0)
 
 
 # ---- clean_text() : strips headers, plus older legacy boilerplate ----

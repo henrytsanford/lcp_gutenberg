@@ -3,4 +3,4 @@ A Flask web app for finding the longest common phrase between any two texts on P
 
 Developed by Henry Sanford.
 
-longestcommonphrase.wl.r.appspot.com/
+https://lcp-gutenberg-qe6v7smvwq-uc.a.run.app

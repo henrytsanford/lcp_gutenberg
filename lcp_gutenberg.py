@@ -10,25 +10,31 @@ CONTEXT_LENGTH = 300 # Number of characters on each side of LCP
 
 
 def lcs(a, b):
-    """Given two strings, return the longest common subsequence, and its index 
+    """Given two strings, return the longest common subsequence, and its index
     in both strings"""
     null_char = '\0'
     s = a + null_char + b
     sa = manber_myers.suffix_array_ManberMyers(s)
     lcp = manber_myers.lcp_array(s, sa)
-    sorted_lcp = numpy.argsort(lcp)[::-1]
+    # lcp[i] is the shared prefix length between sa[i] and sa[i + 1], so the
+    # last entry has no successor to pair with and must be excluded.
+    sorted_lcp = numpy.argsort(lcp[:-1])[::-1]
     a_range = list(range(0, len(a)))
 
+    ls_index = None
     for ele in sorted_lcp:
         x = sa[ele]
         y = sa[ele + 1]
         # is this suffix is in both texts?
-        if ((x < len(a) and y > len(a)) or 
+        if ((x < len(a) and y > len(a)) or
                 (x > len(a) and y < len(a))):
             ls_index = ele
             break
 
-    n = sa[ls_index] 
+    if ls_index is None:
+        return '', 0, 0
+
+    n = sa[ls_index]
     n_b = sa[ls_index + 1] #adjacent to the other suffix
 
     subseq = ''
