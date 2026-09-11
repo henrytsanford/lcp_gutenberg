@@ -112,7 +112,10 @@ def get_ID(title):
 def retrieve_metadata():
     """Returns a dataframe with information about title, author, and ID#
     of every text on Project Gutenberg"""
-    return pl.read_csv("pg_catalog_cleaned.csv", infer_schema_length=None)
+    return (
+        pl.read_csv("pg_catalog_cleaned.csv", infer_schema_length=None)
+        .filter(pl.col("Type") == "Text")
+    )
 
 _AUTHOR_ROLE_RE = re.compile(r"\s*\[[^\]]*\]\s*$")
 

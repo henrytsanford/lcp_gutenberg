@@ -73,6 +73,12 @@ def test_get_id_unknown_title_returns_zero():
     assert lg.get_ID("Definitely Not A Real Gutenberg Title 12345") == 0
 
 
+def test_get_id_excludes_non_text_catalog_entries():
+    """"Moby Dick" (no subtitle) is only cataloged as a Sound/audiobook entry,
+    not a Text one - get_ID must not resolve to it."""
+    assert lg.get_ID("Moby Dick") == 0
+
+
 # ---- get_lcs() : end-to-end pipeline with clean_text()/get_ID() stubbed out ----
 
 def test_get_lcs_builds_context_around_match(monkeypatch):
