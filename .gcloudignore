@@ -17,3 +17,12 @@
 __pycache__/
 # Ignored by the build system
 /setup.cfg
+
+venv/
+*.pyc
+cache/
+tmp/
+.vscode/
+LCP_Gutenberg.ipynb
+Package Version.txt
+pg_catalog.csv

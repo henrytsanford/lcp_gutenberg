@@ -44,3 +44,4 @@ LCP_Gutenberg.ipynb
 launch.json
 *.pyc
 Package Version.txt
+.pytest_cache/

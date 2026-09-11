@@ -81,6 +81,9 @@ body {
     white-space: nowrap;
     text-decoration: none;
 }
+  .lightText{
+    color: #555555;
+  }
 
 .ui-state-hover, .ui-state-active {
     color: #ffffff;

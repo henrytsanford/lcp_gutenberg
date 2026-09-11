@@ -78,7 +78,13 @@ def clean_text(id):
     update_cache_settings()
     raw_book = textget.get_text_by_id(id) # with headers
     clean_book = textget.strip_headers(raw_book) # without headers
-    return clean_book.decode()
+    decoded_book = clean_book.decode();
+    # Some older texts have additional legal boilerplate before the actual
+    # content that strip_headers() doesn't catch; drop everything up to and
+    # including it. Texts without this boilerplate are left untouched, since
+    # split() on a missing separator just returns the original string.
+    final_book = decoded_book.split(sep="content ratios of Etext to header material. ***")[-1]
+    return final_book.lstrip()
 
 def get_ID(title):
     """Given the title of a text, retrieve its corresponding Project
