@@ -1,3 +1,0 @@
-runtime: python38
-entrypoint: gunicorn -b :$PORT main:app --log-level debug -t=0 
-instance_class: F4

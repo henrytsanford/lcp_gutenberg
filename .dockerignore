@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+cache/
+tmp/
+.git/
+.vscode/
+LCP_Gutenberg.ipynb
+Package Version.txt
+pg_catalog.csv

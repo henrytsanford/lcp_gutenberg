@@ -1,5 +1,6 @@
-Flask==3.1.3
+Flask==2.1.2
+Werkzeug==2.1.2
 gutenbergpy==0.3.5
 numpy==1.24.0
 pandas==2.0.1
-gunicorn==22.0.0
+gunicorn==20.1.0
