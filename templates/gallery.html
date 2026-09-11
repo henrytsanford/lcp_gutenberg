@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>LCP_Gutenberg &mdash; Gallery</title>
+    <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='favicon.jpg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <main>
+        <header>
+            <h1>LCP_Gutenberg</h1>
+            <p class="byline">By Henry Sanford</p>
+            <p>A gallery of unexpectedly shared passages found across <a href="https://www.gutenberg.org/">Project Gutenberg</a>.</p>
+            <nav class="site-nav"><a href="{{ url_for('index') }}">&larr; Back to search</a></nav>
+        </header>
+
+        {% for entry in entries %}
+        <section class="gallery-entry">
+            <h2>&ldquo;{{ entry.subseq }}&rdquo;</h2>
+            <div class="context-grid">
+                <article class="context-card">
+                    <h3 class="context-card__title">{{ entry.book_a.title }}</h3>
+                    <p class="context-card__meta">{{ entry.book_a.author }}</p>
+                    <p class="context-card__text">{{ entry.book_a.leading_context }}<mark>{{ entry.subseq }}</mark>{{ entry.book_a.trailing_context }}</p>
+                </article>
+                <article class="context-card">
+                    <h3 class="context-card__title">{{ entry.book_b.title }}</h3>
+                    <p class="context-card__meta">{{ entry.book_b.author }}</p>
+                    <p class="context-card__text">{{ entry.book_b.leading_context }}<mark>{{ entry.subseq }}</mark>{{ entry.book_b.trailing_context }}</p>
+                </article>
+            </div>
+        </section>
+        {% endfor %}
+    </main>
+</body>
+</html>

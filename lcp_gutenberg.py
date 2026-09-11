@@ -86,6 +86,13 @@ def get_lcs(a_title, b_title):
     else:
         return("Error, invalid title(s)", "", "", "","")
 
+_HTML_VERSION_NOTE_RE = re.compile(
+    r"\ANote: Project Gutenberg also has an HTML version of this\s+"
+    r"file which includes the original [^.]*\.\s+"
+    r"See \S+ or \S+:\s+"
+    r"\([^)]*\)\s+or\s+\([^)]*\)\s*"
+)
+
 def clean_text(id):
     """Given the ID# of a text, return the text without headers."""
     update_cache_settings()
@@ -97,6 +104,10 @@ def clean_text(id):
     # including it. Texts without this boilerplate are left untouched, since
     # split() on a missing separator just returns the original string.
     final_book = decoded_book.split(sep="content ratios of Etext to header material. ***")[-1]
+    final_book = final_book.lstrip()
+    # Many texts also carry a leading transcriber's note pointing to an HTML
+    # version with illustrations; not part of the book, so drop it too.
+    final_book = _HTML_VERSION_NOTE_RE.sub("", final_book, count=1)
     return final_book.lstrip()
 
 def get_ID(title):

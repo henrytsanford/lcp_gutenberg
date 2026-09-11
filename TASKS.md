@@ -14,8 +14,6 @@ just this file.
 
 ## In Progress
 
-- [ ] T014 — Add a "gallery" page showcasing pre-computed longest-common-phrase matches between books (owner: Henry, started: 2026-09-10) — new `find_gallery_matches.py` (manual, one-off script) samples catalog book IDs (duplicate-title groups + random fill), cheaply ranks pairs by shared text-prefix length, runs the real `lcs()` pipeline on top candidates, and writes results to `gallery_data.json`. New `/gallery` route in `main.py` + `templates/gallery.html` render that static JSON (no network/LCS work at request time). Extracts a `build_match_context()` helper out of `lcp_gutenberg.get_lcs()` so both the live app and the script share the same context-slicing logic.
-
 ## Backlog
 
 ## Done
