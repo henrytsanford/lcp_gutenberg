@@ -3,7 +3,8 @@
 
   var titlesEl = document.getElementById("titles-data");
   var titles = titlesEl ? JSON.parse(titlesEl.textContent) : [];
-  var titlesLower = titles.map(function (t) { return t.toLowerCase(); });
+  var titleStrings = titles.map(function (t) { return t.title; });
+  var titlesLower = titleStrings.map(function (t) { return t.toLowerCase(); });
   var MAX_RESULTS = 10;
   var DEBOUNCE_MS = 150;
 
@@ -59,7 +60,7 @@
     var best = null;
     var bestDist = Infinity;
     for (var i = 0; i < candidates.length; i++) {
-      var dist = anchoredDistance(q, candidates[i].toLowerCase());
+      var dist = anchoredDistance(q, candidates[i].title.toLowerCase());
       if (dist < bestDist) {
         bestDist = dist;
         best = candidates[i];
@@ -115,13 +116,26 @@
       return;
     }
 
-    matches.forEach(function (title, i) {
+    matches.forEach(function (item, i) {
       var li = document.createElement("li");
       li.className = "autocomplete-option";
       li.setAttribute("role", "option");
       li.id = this.list.id + "-opt-" + i;
       li.setAttribute("aria-selected", "false");
-      li.textContent = title;
+      li.dataset.title = item.title;
+
+      var titleEl = document.createElement("span");
+      titleEl.className = "autocomplete-option__title";
+      titleEl.textContent = item.title;
+      li.appendChild(titleEl);
+
+      if (item.author) {
+        var authorEl = document.createElement("span");
+        authorEl.className = "autocomplete-option__author";
+        authorEl.textContent = item.author;
+        li.appendChild(authorEl);
+      }
+
       li.addEventListener("mousedown", function (e) {
         e.preventDefault();
         this.selectOption(li);
@@ -170,13 +184,14 @@
   };
 
   Autocomplete.prototype.selectOption = function (li) {
-    this.input.value = li.textContent;
+    this.input.value = li.dataset.title;
     this.close();
   };
 
   Autocomplete.prototype.selectActive = function () {
-    if (this.activeIndex >= 0 && this.options[this.activeIndex]) {
-      this.selectOption(this.options[this.activeIndex]);
+    var index = this.activeIndex >= 0 ? this.activeIndex : 0;
+    if (this.options[index]) {
+      this.selectOption(this.options[index]);
       return true;
     }
     return false;
@@ -215,12 +230,12 @@
       }
       var idx = titlesLower.indexOf(value.toLowerCase());
       if (idx !== -1) {
-        this.input.value = titles[idx];
+        this.input.value = titles[idx].title;
         return;
       }
       var match = closestTitle(value);
       if (match) {
-        this.input.value = match;
+        this.input.value = match.title;
       }
     }.bind(this), 100);
   };
@@ -235,7 +250,7 @@
     if (!box1 || !box2) {
       return;
     }
-    var nonEmpty = titles.filter(function (t) { return t; });
+    var nonEmpty = titleStrings.filter(function (t) { return t; });
     if (nonEmpty.length < 2) {
       return;
     }

@@ -1,6 +1,7 @@
+import re
 import tempfile
 import numpy
-import pandas as pd
+import polars as pl
 import manber_myers
 from gutenbergpy import textget
 from gutenbergpy.gutenbergcachesettings import GutenbergCacheSettings
@@ -96,22 +97,40 @@ def get_ID(title):
     """Given the title of a text, retrieve its corresponding Project
     Gutenberg ID#. Return 0 if title is not found."""
     pg_catalog = retrieve_metadata()
-    query = pg_catalog.query("cleaned_title==@title")
-    if(len(query) > 0):
-        return query["Text#"].values[0]
+    match = pg_catalog.filter(pl.col("cleaned_title") == title)
+    if(len(match) > 0):
+        return match["Text#"][0]
     else:
         return 0 #Title is not in catalog
-    
+
 def retrieve_metadata():
     """Returns a dataframe with information about title, author, and ID#
     of every text on Project Gutenberg"""
-    return pd.read_csv("pg_catalog_cleaned.csv", low_memory=False)
+    return pl.read_csv("pg_catalog_cleaned.csv", infer_schema_length=None)
+
+_AUTHOR_ROLE_RE = re.compile(r"\s*\[[^\]]*\]\s*$")
+
+def _format_author(raw):
+    """Return a single display-friendly author name from a raw catalog
+    Authors field (e.g. "Jefferson, Thomas, 1743-1826"), or "" if missing.
+    Keeps only the first of multiple semicolon-separated authors and drops
+    trailing role tags (e.g. "[Editor]") and birth/death-year segments."""
+    if raw is None:
+        return ""
+    first = _AUTHOR_ROLE_RE.sub("", raw.split(";")[0].strip())
+    parts = first.split(",")
+    if len(parts) > 1 and re.search(r"[\d?]", parts[-1]):
+        parts = parts[:-1]
+    return ",".join(parts).strip()
 
 def retrieve_titles():
-    """Returns a list of the title of every text on Project Gutenberg"""
+    """Returns a list of {"title": ..., "author": ...} dicts for every text
+    on Project Gutenberg. author is "" when missing from the catalog."""
     pg_catalog = retrieve_metadata()
-    titles = pg_catalog.cleaned_title.to_list()
-    return titles
+    return [
+        {"title": title, "author": _format_author(author)}
+        for title, author in zip(pg_catalog["cleaned_title"], pg_catalog["Authors"])
+    ]
 
 def update_cache_settings():
     """The text file cache must be written a temporary directory because

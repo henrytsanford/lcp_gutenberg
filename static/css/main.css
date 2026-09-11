@@ -167,13 +167,35 @@ input[type=submit][disabled] {
 }
 
 .autocomplete-option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   padding: var(--space-2) var(--space-3);
   cursor: pointer;
+  overflow: hidden;
+}
+
+.autocomplete-option__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.autocomplete-option__author {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .autocomplete-option[aria-selected="true"] {
   background: var(--color-accent);
   color: #fff;
+}
+
+.autocomplete-option[aria-selected="true"] .autocomplete-option__author {
+  color: var(--color-accent-tint);
 }
 
 .notice {
