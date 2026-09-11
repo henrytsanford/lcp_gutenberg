@@ -22,11 +22,13 @@
                 <article class="context-card">
                     <h3 class="context-card__title">{{ entry.book_a.title }}</h3>
                     <p class="context-card__meta">{{ entry.book_a.author }}</p>
+                    {% if entry.book_a.id %}<p class="context-card__meta"><a href="https://www.gutenberg.org/ebooks/{{ entry.book_a.id }}" target="_blank" rel="noopener">View on Project Gutenberg &#8599;</a></p>{% endif %}
                     <p class="context-card__text">{{ entry.book_a.leading_context }}<mark>{{ entry.subseq }}</mark>{{ entry.book_a.trailing_context }}</p>
                 </article>
                 <article class="context-card">
                     <h3 class="context-card__title">{{ entry.book_b.title }}</h3>
                     <p class="context-card__meta">{{ entry.book_b.author }}</p>
+                    {% if entry.book_b.id %}<p class="context-card__meta"><a href="https://www.gutenberg.org/ebooks/{{ entry.book_b.id }}" target="_blank" rel="noopener">View on Project Gutenberg &#8599;</a></p>{% endif %}
                     <p class="context-card__text">{{ entry.book_b.leading_context }}<mark>{{ entry.subseq }}</mark>{{ entry.book_b.trailing_context }}</p>
                 </article>
             </div>

@@ -21,6 +21,18 @@ def test_lcs_finds_shared_phrase_with_spaces():
     assert b[b_index:b_index + len(subseq)] == subseq
 
 
+def test_lcs_skips_whitespace_run_for_genuine_match():
+    """A long run of layout whitespace (e.g. centered-text padding) can be
+    the literal longest common substring; lcs() should skip it in favor of
+    a shorter but genuine shared phrase."""
+    a = "foo" + " " * 20 + "xyz and the quick fox runs"
+    b = "bar" + " " * 20 + "abc and the quick fox jumps"
+    subseq, a_index, b_index = lg.lcs(a, b)
+    assert subseq == " and the quick fox "
+    assert a[a_index:a_index + len(subseq)] == subseq
+    assert b[b_index:b_index + len(subseq)] == subseq
+
+
 def test_lcs_no_overlap_returns_empty():
     subseq, a_index, b_index = lg.lcs("abc", "xyz")
     assert subseq == ""

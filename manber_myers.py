@@ -48,9 +48,9 @@ def lcp_array(s, sa):
     n = len(s)
     k = 0
     lcp = [0] * n
-    rank = [0] * n
-    for i in range(n):
-        rank[sa[i]] = i
+    rank = numpy.empty(n, dtype=numpy.int64)
+    rank[sa] = numpy.arange(n)
+    rank = rank.tolist()
     for i in range(n):
         if rank[i] == n-1:
             k = 0

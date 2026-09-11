@@ -34,6 +34,9 @@ runs pytest and a Docker build on push/PR to `main`.
 ## Git & conventions
 
 - Never `git commit`/`git push` or change repo/remote state — Henry handles that himself.
+- Don't change what's shown in the gallery (which matches/books appear in `gallery_data.json`,
+  or `find_gallery_matches.py`'s sampling/filtering) unless explicitly asked — regenerating it
+  is a one-off manual step, not something to redo incidentally while touching gallery code.
 - Keep diffs minimal: change only what's needed, don't reformat or restructure untouched code.
 - Comments: concise, non-temporal — current behavior only, never "added for X"/"fixed Y"/task
   or issue references.

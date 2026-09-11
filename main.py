@@ -21,17 +21,21 @@ def index():
         a_title = user_selections['text 1']
         b_title=user_selections['text 2']
         subseq, a_leading_context, a_trailing_context, b_leading_context, b_trailing_context = lcp_gutenberg.get_lcs(
-            a_title=a_title, 
+            a_title=a_title,
             b_title=b_title)
-        return render_template("index.html", 
-            titles = titles, 
+        a_id = lcp_gutenberg.get_ID(a_title)
+        b_id = lcp_gutenberg.get_ID(b_title)
+        return render_template("index.html",
+            titles = titles,
             subseq = subseq,
             a_leading_context = a_leading_context,
             a_trailing_context = a_trailing_context,
             b_leading_context = b_leading_context,
             b_trailing_context = b_trailing_context,
             a_title = a_title,
-            b_title = b_title)
+            b_title = b_title,
+            a_id = a_id,
+            b_id = b_id)
 
 @app.route("/gallery")
 def gallery():

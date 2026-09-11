@@ -10,6 +10,8 @@ DEFAULT_CACHE_DIR = "tmp" # Where to store compressed texts on Google Cloud
 CONTEXT_LENGTH = 300 # Number of characters on each side of LCP
 
 
+_WHITESPACE_RUN_RE = re.compile(r"\s{3,}")
+
 def lcs(a, b):
     """Given two strings, return the longest common subsequence, and its index
     in both strings"""
@@ -19,8 +21,9 @@ def lcs(a, b):
     lcp = manber_myers.lcp_array(s, sa)
     # lcp[i] is the shared prefix length between sa[i] and sa[i + 1], so the
     # last entry has no successor to pair with and must be excluded.
-    sorted_lcp = numpy.argsort(lcp[:-1])[::-1]
-    a_range = list(range(0, len(a)))
+    lcp_arr = numpy.asarray(lcp)
+    sorted_lcp = numpy.argsort(lcp_arr[:-1])[::-1]
+    a_range = range(0, len(a))
 
     ls_index = None
     for ele in sorted_lcp:
@@ -29,6 +32,10 @@ def lcs(a, b):
         # is this suffix is in both texts?
         if ((x < len(a) and y > len(a)) or
                 (x > len(a) and y < len(a))):
+            # skip matches dominated by layout whitespace (centered text,
+            # table padding) rather than real shared content
+            if _WHITESPACE_RUN_RE.search(s[x:x + lcp[ele]]):
+                continue
             ls_index = ele
             break
 
@@ -38,15 +45,8 @@ def lcs(a, b):
     n = sa[ls_index]
     n_b = sa[ls_index + 1] #adjacent to the other suffix
 
-    subseq = ''
-    suffix_one = s[n:]
-    suffix_two = s[n_b:]
+    subseq = s[n:n + lcp[ls_index]]
 
-    for i in range(min(len(suffix_two), len(suffix_one))):
-        if suffix_one[i] != suffix_two[i]:
-            break
-        subseq += suffix_one[i]
-    
     # check which index is in which text before returning
     if(n in a_range):
         a_index = n

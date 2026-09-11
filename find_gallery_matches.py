@@ -94,12 +94,14 @@ def score_candidates(pairs, catalog):
         results.append({
             "subseq": subseq,
             "book_a": {
+                "id": id_a,
                 "title": a_title,
                 "author": a_author,
                 "leading_context": a_lead,
                 "trailing_context": a_trail,
             },
             "book_b": {
+                "id": id_b,
                 "title": b_title,
                 "author": b_author,
                 "leading_context": b_lead,
