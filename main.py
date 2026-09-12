@@ -1,3 +1,4 @@
+import gzip
 import json
 
 from flask import Flask, request, render_template, make_response
@@ -8,18 +9,27 @@ app = Flask(__name__)
 GALLERY_DATA_PATH = "gallery_data.json"
 
 _titles_json_cache = None
+_titles_json_gzip_cache = None
 
 @app.route("/titles.json")
 def titles_json():
     # Autocomplete data (~7MB) is fetched separately from the initial page
     # so it doesn't block first render; cached (both the list and its
-    # serialized form) since the catalog doesn't change at runtime.
-    global _titles_json_cache
+    # serialized/gzipped forms) since the catalog doesn't change at runtime.
+    # Gzipped since JSON text compresses ~5-10x and gunicorn/Cloud Run don't
+    # compress responses on their own.
+    global _titles_json_cache, _titles_json_gzip_cache
     if _titles_json_cache is None:
         _titles_json_cache = json.dumps(lcp_gutenberg.retrieve_titles())
-    response = make_response(_titles_json_cache)
+        _titles_json_gzip_cache = gzip.compress(_titles_json_cache.encode("utf-8"))
+    if "gzip" in request.headers.get("Accept-Encoding", ""):
+        response = make_response(_titles_json_gzip_cache)
+        response.headers["Content-Encoding"] = "gzip"
+    else:
+        response = make_response(_titles_json_cache)
     response.headers["Content-Type"] = "application/json"
     response.headers["Cache-Control"] = "public, max-age=3600"
+    response.headers["Vary"] = "Accept-Encoding"
     return response
 
 @app.route("/", methods =["POST","GET"])

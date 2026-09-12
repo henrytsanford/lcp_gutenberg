@@ -1,6 +1,7 @@
 import bisect
 import re
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 import numpy
 import polars as pl
 import manber_myers
@@ -106,8 +107,13 @@ def get_lcs(a_title, b_title):
     a_code = get_ID(a_title)
     b_code = get_ID(b_title)
     if(a_code != 0 and b_code !=0):
-        a = clean_text(a_code)
-        b = clean_text(b_code)
+        # Fetch both texts concurrently since each is a blocking network
+        # download and neither depends on the other.
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            a_future = executor.submit(clean_text, a_code)
+            b_future = executor.submit(clean_text, b_code)
+            a = a_future.result()
+            b = b_future.result()
         return build_match_context(a, b)
     else:
         return("Error, invalid title(s)", "", "", "","")
