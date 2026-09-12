@@ -126,13 +126,20 @@ def get_ID(title):
     else:
         return 0 #Title is not in catalog
 
+_metadata_cache = None
+
 def retrieve_metadata():
     """Returns a dataframe with information about title, author, and ID#
-    of every text on Project Gutenberg"""
-    return (
-        pl.read_csv("pg_catalog_cleaned.csv", infer_schema_length=None)
-        .filter(pl.col("Type") == "Text")
-    )
+    of every text on Project Gutenberg. Parsed once per process and cached,
+    since the catalog CSV doesn't change at runtime and re-parsing it on
+    every request dominated page load time."""
+    global _metadata_cache
+    if _metadata_cache is None:
+        _metadata_cache = (
+            pl.read_csv("pg_catalog_cleaned.csv", infer_schema_length=None)
+            .filter(pl.col("Type") == "Text")
+        )
+    return _metadata_cache
 
 _AUTHOR_ROLE_RE = re.compile(r"\s*\[[^\]]*\]\s*$")
 
@@ -149,14 +156,20 @@ def _format_author(raw):
         parts = parts[:-1]
     return ",".join(parts).strip()
 
+_titles_cache = None
+
 def retrieve_titles():
     """Returns a list of {"title": ..., "author": ...} dicts for every text
-    on Project Gutenberg. author is "" when missing from the catalog."""
-    pg_catalog = retrieve_metadata()
-    return [
-        {"title": title, "author": _format_author(author)}
-        for title, author in zip(pg_catalog["cleaned_title"], pg_catalog["Authors"])
-    ]
+    on Project Gutenberg. author is "" when missing from the catalog. Cached
+    per process alongside retrieve_metadata()."""
+    global _titles_cache
+    if _titles_cache is None:
+        pg_catalog = retrieve_metadata()
+        _titles_cache = [
+            {"title": title, "author": _format_author(author)}
+            for title, author in zip(pg_catalog["cleaned_title"], pg_catalog["Authors"])
+        ]
+    return _titles_cache
 
 def update_cache_settings():
     """The text file cache must be written a temporary directory because

@@ -1,10 +1,20 @@
 (function () {
   "use strict";
 
-  var titlesEl = document.getElementById("titles-data");
-  var titles = titlesEl ? JSON.parse(titlesEl.textContent) : [];
-  var titleStrings = titles.map(function (t) { return t.title; });
-  var titlesLower = titleStrings.map(function (t) { return t.toLowerCase(); });
+  var titles = [];
+  var titleStrings = [];
+  var titlesLower = [];
+  // Autocomplete data is a separate ~7MB request so the initial page can
+  // render without waiting on it; inputs are usable immediately and simply
+  // have no matches until this resolves.
+  fetch("/titles.json")
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      titles = data;
+      titleStrings = titles.map(function (t) { return t.title; });
+      titlesLower = titleStrings.map(function (t) { return t.toLowerCase(); });
+      setRandomPlaceholders();
+    });
   var MAX_RESULTS = 10;
   var DEBOUNCE_MS = 150;
 
@@ -244,7 +254,7 @@
     new Autocomplete(el);
   });
 
-  (function setRandomPlaceholders() {
+  function setRandomPlaceholders() {
     var box1 = document.getElementById("tags");
     var box2 = document.getElementById("tags2");
     if (!box1 || !box2) {
@@ -261,7 +271,7 @@
     } while (j === i);
     box1.placeholder = nonEmpty[i];
     box2.placeholder = nonEmpty[j];
-  })();
+  }
 
   var form = document.getElementById("form");
   var submitBtn = document.getElementById("submit");

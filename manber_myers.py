@@ -15,7 +15,10 @@ def suffix_array_ManberMyers(s):
     if n == 1:
         return [0]
 
-    rank = numpy.array([ord(c) for c in s])
+    # Vectorized equivalent of numpy.array([ord(c) for c in s]): encoding to
+    # UTF-32 gives one 4-byte little-endian code point per character, read
+    # back as uint32 - avoids a Python-level loop over the whole string.
+    rank = numpy.frombuffer(s.encode("utf-32-le"), dtype=numpy.uint32).astype(numpy.int64)
     idx = numpy.arange(n)
     k = 1
     while True:

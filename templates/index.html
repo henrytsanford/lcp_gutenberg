@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LCP_Gutenberg</title>
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='favicon.jpg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -51,7 +52,6 @@
         {% endif %}
     </main>
 
-    <script type="application/json" id="titles-data">{{ titles|tojson|safe }}</script>
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </body>
 </html>
