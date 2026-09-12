@@ -38,6 +38,8 @@ def index():
             b_title=b_title)
         a_id = lcp_gutenberg.get_ID(a_title)
         b_id = lcp_gutenberg.get_ID(b_title)
+        a_author = lcp_gutenberg.get_author(a_title)
+        b_author = lcp_gutenberg.get_author(b_title)
         return render_template("index.html",
             subseq = subseq,
             a_leading_context = a_leading_context,
@@ -47,7 +49,9 @@ def index():
             a_title = a_title,
             b_title = b_title,
             a_id = a_id,
-            b_id = b_id)
+            b_id = b_id,
+            a_author = a_author,
+            b_author = b_author)
 
 @app.route("/gallery")
 def gallery():

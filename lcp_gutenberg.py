@@ -1,3 +1,4 @@
+import bisect
 import re
 import tempfile
 import numpy
@@ -12,6 +13,30 @@ CONTEXT_LENGTH = 300 # Number of characters on each side of LCP
 
 _WHITESPACE_RUN_RE = re.compile(r"\s{3,}")
 
+def _whitespace_run_spans(s):
+    """Return (starts, ends) of every maximal run of 3+ whitespace chars in
+    s, computed once per lcs() call so the reject loop below doesn't re-scan
+    a potentially huge slice of s on every rejected candidate."""
+    starts = []
+    ends = []
+    for m in _WHITESPACE_RUN_RE.finditer(s):
+        starts.append(m.start())
+        ends.append(m.end())
+    return starts, ends
+
+def _overlaps_whitespace_run(run_starts, run_ends, start, end):
+    """Equivalent to bool(_WHITESPACE_RUN_RE.search(s[start:end])), but
+    O(log R + k) via the precomputed run spans instead of O(end - start):
+    true iff some run overlaps [start, end) by at least 3 characters, which
+    is exactly when a 3+ whitespace substring exists inside the window."""
+    i = bisect.bisect_right(run_ends, start)
+    while i < len(run_starts) and run_starts[i] < end:
+        overlap = min(end, run_ends[i]) - max(start, run_starts[i])
+        if overlap >= 3:
+            return True
+        i += 1
+    return False
+
 def lcs(a, b):
     """Given two strings, return the longest common subsequence, and its index
     in both strings"""
@@ -24,6 +49,7 @@ def lcs(a, b):
     lcp_arr = numpy.asarray(lcp)
     sorted_lcp = numpy.argsort(lcp_arr[:-1])[::-1]
     a_range = range(0, len(a))
+    run_starts, run_ends = _whitespace_run_spans(s)
 
     ls_index = None
     for ele in sorted_lcp:
@@ -34,7 +60,7 @@ def lcs(a, b):
                 (x > len(a) and y < len(a))):
             # skip matches dominated by layout whitespace (centered text,
             # table padding) rather than real shared content
-            if _WHITESPACE_RUN_RE.search(s[x:x + lcp[ele]]):
+            if _overlaps_whitespace_run(run_starts, run_ends, x, x + lcp[ele]):
                 continue
             ls_index = ele
             break
@@ -125,6 +151,16 @@ def get_ID(title):
         return match["Text#"][0]
     else:
         return 0 #Title is not in catalog
+
+def get_author(title):
+    """Given the title of a text, retrieve its display-friendly author
+    name. Return "" if title is not found or has no author."""
+    pg_catalog = retrieve_metadata()
+    match = pg_catalog.filter(pl.col("cleaned_title") == title)
+    if(len(match) > 0):
+        return _format_author(match["Authors"][0])
+    else:
+        return ""
 
 _metadata_cache = None
 

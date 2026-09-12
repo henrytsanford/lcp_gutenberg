@@ -1,3 +1,5 @@
+import time
+
 import lcp_gutenberg as lg
 
 
@@ -43,6 +45,26 @@ def test_lcs_no_overlap_returns_empty():
 def test_lcs_empty_input_returns_empty():
     assert lg.lcs("", "abc") == ("", 0, 0)
     assert lg.lcs("abc", "") == ("", 0, 0)
+
+
+def test_lcs_performance_with_padded_repetition():
+    """Heavily repeated content whose whitespace marker sits at the very end
+    of each unit (defeating regex early-exit, like a padded table-of-contents
+    column) used to force many expensive O(span length) rejects; this should
+    stay fast regardless of how many such candidates are rejected."""
+    unit = ("x" * 4000) + "   "
+    padded_block = unit * 25
+    common = "the quick brown fox jumps over the lazy dog"
+    a = padded_block + common
+    b = padded_block + common
+
+    start = time.perf_counter()
+    subseq, a_index, b_index = lg.lcs(a, b)
+    elapsed = time.perf_counter() - start
+
+    assert a[a_index:a_index + len(subseq)] == subseq
+    assert b[b_index:b_index + len(subseq)] == subseq
+    assert elapsed < 3.0  # old implementation took ~24s on this input
 
 
 # ---- clean_text() : strips headers, plus older legacy boilerplate ----
