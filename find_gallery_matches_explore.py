@@ -15,23 +15,8 @@ import random
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import lcp_gutenberg
+from gallery_match_filters import is_genuine_match, build_subjects_blob
 
-MIN_MATCH_LENGTH = 20      # chars; genuine coincidental phrases between unrelated
-                            # books are typically 20-35 chars, so this just discards
-                            # single-word matches like "the" or "and the"
-MAX_MATCH_LENGTH = 600     # chars; discard near-duplicate-document matches
-# Transcriber/production notes (e.g. pointers to an HTML edition or a source
-# scan) are common front matter across many texts and aren't real shared
-# content; skip matches that are just this boilerplate.
-BOILERPLATE_MARKERS = (
-    "gutenberg.org", "archive.org", "books.google", "google.com",
-    ".htm", ".zip", "Project Gutenberg",
-)
-# Whitespace runs, "* * * * *" section dividers, and bare headings like
-# "CONTENTS" coincidentally align between unrelated books far more often
-# than real prose does, so a genuine match needs real letters in it.
-MIN_ALPHA_CHARS = 20
-MIN_ALPHA_RATIO = 0.5
 PAIR_COUNT = 1000          # random book pairs to run the real lcs() on
 GALLERY_SIZE = 5           # final entries written out
 REPORT_SIZE = 15           # top candidates printed to stdout for review
@@ -71,8 +56,10 @@ def lookup_title_author(catalog, book_id):
     if len(row) == 0:
         return None
     title = row["cleaned_title"][0]
-    author = lcp_gutenberg._format_author(row["Authors"][0])
-    return title, author
+    raw_author = row["Authors"][0]
+    author = lcp_gutenberg._format_author(raw_author)
+    subjects = build_subjects_blob(raw_author, row["Subjects"][0], row["Bookshelves"][0])
+    return title, author, subjects
 
 
 def annotate_pairs(pairs, catalog):
@@ -111,16 +98,11 @@ def _score_chunk(chunk):
         subseq, a_lead, a_trail, b_lead, b_trail = lcp_gutenberg.build_match_context(
             text_a, text_b
         )
-        if len(subseq) < MIN_MATCH_LENGTH or len(subseq) > MAX_MATCH_LENGTH:
-            continue
-        if any(marker in subseq for marker in BOILERPLATE_MARKERS):
-            continue
-        letters = sum(1 for c in subseq if c.isalpha())
-        if letters < MIN_ALPHA_CHARS or letters / len(subseq) < MIN_ALPHA_RATIO:
+        if not is_genuine_match(subseq, a_meta, b_meta):
             continue
 
-        a_title, a_author = a_meta
-        b_title, b_author = b_meta
+        a_title, a_author, _ = a_meta
+        b_title, b_author, _ = b_meta
         results.append({
             "subseq": subseq,
             "book_a": {

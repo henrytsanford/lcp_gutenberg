@@ -17,20 +17,20 @@
     }
   },
   {
-    "subseq": " struggle\r\nfor existence, the ",
+    "subseq": "on their heads and sceptres in their hands",
     "book_a": {
-      "id": 365,
-      "title": "The Land of Little Rain",
-      "author": "Austin, Mary",
-      "leading_context": "...acti, low herbs, a thousand\r\nsorts, one finds journeying east from the coastwise hills. There is\r\nneither poverty of soil nor species to account for the sparseness of\r\ndesert growth, but simply that each plant requires more room. So much\r\nearth must be pre\u00ebmpted to extract so much moisture. The real",
-      "trailing_context": "real brain of the plant, is underground; above there\r\nis room for a rounded perfect growth. In Death Valley, reputed the very\r\ncore of desolation, are nearly two hundred identified species.\r\n\r\nAbove the lower tree-line, which is also the snow-line, mapped out\r\nabruptly by the sun, one finds spreadin..."
+      "id": 996,
+      "title": "Don Quixote",
+      "author": "Cervantes Saavedra, Miguel de",
+      "leading_context": "...g upon a cushion of brocade and crowned with a garland of sweet-smelling flowers of divers sorts, her hands crossed upon her bosom, and between them a branch of yellow palm of victory. On one side of the court was erected a stage, where upon two chairs were seated two persons who from having crowns ",
+      "trailing_context": " appeared to be kings of some sort, whether real or mock ones. By the side of this stage, which was reached by steps, were two other chairs on which the men carrying the prisoners seated Don Quixote and Sancho, all in silence, and by signs giving them to understand that they too were to be silent; w..."
     },
     "book_b": {
-      "id": 5711,
-      "title": "Germinal",
-      "author": "Zola, \u00c9mile",
-      "leading_context": "...\r\ntalkers, fellows who go into politics as one goes to the bar, to get an\r\nincome out of phrases.\r\n\r\n\u00c9tienne was now studying Darwin. He had read fragments, summarized\r\nand popularized in a five-sou volume; and out of this ill-understood\r\nreading he had gained for himself a revolutionary idea of the",
-      "trailing_context": "lean eating the fat, the strong people devouring the\r\npallid middle class. But Souvarine furiously attacked the stupidity\r\nof the Socialists who accept Darwin, that apostle of scientific\r\ninequality, whose famous selection was only good for aristocratic\r\nphilosophers. His mate persisted, however, wi..."
+      "id": 57277,
+      "title": "A Dreamer's Tales",
+      "author": "Dunsany, Lord",
+      "leading_context": "..., and mysterious craft loomed suddenly out of the dark and furtively passed away. And when we had passed through the forest lit by the fireflies we would come to the open plains, and gallop onwards with scarlet flamingoes flying along beside us through the lands of dusky kings, with golden crowns up",
+      "trailing_context": ", who came running out of their palaces to see us pass. Then I would wheel suddenly, and the dust flew up from my four hoofs as I turned and we galloped home again, and my master was put to bed. And again he would ride abroad on another day till we came to magical fortresses guarded by wizardry and ..."
     }
   },
   {
@@ -51,20 +51,20 @@
     }
   },
   {
-    "subseq": " the same thing over and over",
+    "subseq": ", with all the zest gone out of the performance. ",
     "book_a": {
-      "id": 507,
-      "title": "Adam Bede",
-      "author": "Eliot, George",
-      "leading_context": "...ll answer for it the corn \u2019ll\r\nbe safe.\u201d\r\n\r\n\u201cYes, there\u2019s folks as find a pleasure in undervallying what they know\r\nbut little about,\u201d said Mr. Craig.\r\n\r\n\u201cWhy, the Scotch tunes are just like a scolding, nagging woman,\u201d Bartle\r\nwent on, without deigning to notice Mr. Craig\u2019s remark. \u201cThey go on\r\nwith",
-      "trailing_context": " again, and never come to a reasonable\r\nend. Anybody \u2019ud think the Scotch tunes had always been asking a\r\nquestion of somebody as deaf as old Taft, and had never got an answer\r\nyet.\u201d\r\n\r\nAdam minded the less about sitting by Mr. Casson, because this position\r\nenabled him to see Hetty, who was not far..."
+      "id": 47,
+      "title": "Anne of Avonlea",
+      "author": "Montgomery, L. M. (Lucy Maud)",
+      "leading_context": "... other\u2019s eyes. At half past one Marilla again emerged from the parlor. \u201cGirls, we _must_ have dinner. Everybody is hungry and it\u2019s no use waiting any longer. Priscilla and Mrs. Morgan are not coming, that\u2019s plain, and nothing is being improved by waiting.\u201d Anne and Diana set about lifting the dinner",
+      "trailing_context": "\u201cI don\u2019t believe I\u2019ll be able to eat a mouthful,\u201d said Diana dolefully. \u201cNor I. But I hope everything will be nice for Miss Stacy\u2019s and Mr. and Mrs. Allan\u2019s sakes,\u201d said Anne listlessly. When Diana dished the peas she tasted them and a very peculiar expression crossed her face. \u201cAnne, did _you_ put ..."
     },
     "book_b": {
-      "id": 617,
-      "title": "Poems",
-      "author": "Dorr, Julia C. R. (Caroline Ripley)",
-      "leading_context": "...nd state,\r\n    And with glitter of mail, and clang of sword,\r\n    Strides to his place at the head of the board,\r\n    Ofttimes reverses the order set,\r\n    Nor beckons to crown or coronet!\r\n          Whom he will the Master summons\r\n          To sit at his right hand!\r\n\r\n\r\nOVER AND OVER\r\n\r\n    \u201cJust",
-      "trailing_context": "!\u201d\r\n      But that is the way of the world, my dear;\r\n    Over and over, over and over,\r\n      Old things repeated from year to year!\r\n\r\n    Hear what the sun saith: \u201cPatient still,\r\n      The vaulted heavens I climb and climb,\r\n    Over and over with tireless will,\r\n      Day after day till the end..."
+      "id": 64365,
+      "title": "Anne of Green Gables",
+      "author": "Montgomery, L. M. (Lucy Maud)",
+      "leading_context": "...ery dizzily. Anne, with tears of disappointment in her eyes, got Diana\u2019s hat and went with her as far as the Barry yard fence. Then she wept all the way back to Green Gables, where she sorrowfully put the remainder of the raspberry cordial back into the pantry and got tea ready for Matthew and Jerry",
+      "trailing_context": "The next day was Sunday and as the rain poured down in torrents from dawn till dusk Anne did not stir abroad from Green Gables. Monday afternoon Marilla sent her down to Mrs. Lynde\u2019s on an errand. In a very short space of time Anne came flying back up the lane, with tears rolling down her cheeks. In..."
     }
   },
   {
@@ -82,6 +82,23 @@
       "author": "Crabbe, George",
       "leading_context": "...RE, Richard III.\r\n\r\nMy conscience is but a kind of hard conscience . . . The fiend\r\ngives the more friendly counsel.\r\n                                           Merchant of Venice.\r\n\r\nThou hast it now--and I fear\r\nThou play'dst most foully for it.\r\n                         Macbeth.\r\n\r\nCanst thou not",
       "trailing_context": ",\r\nPluck from the memory a rooted sorrow,\r\nRase out the written troubles of the brain,\r\nAnd with some sweet oblivious antidote\r\nCleanse the foul bosom of that perilous stuff\r\nWhich weighs upon the heart?\r\n                                     Macbeth.\r\n\r\n                          Soft! I did but drea..."
+    }
+  },
+  {
+    "subseq": "ed his forehead with his big red bandanna",
+    "book_a": {
+      "id": 42840,
+      "title": "Sisters",
+      "author": "North, Grace May",
+      "leading_context": "...k for him and take care of him, there he stayed until he was twenty-five. Then he went ’round the world and came back with a wife.” Grandpa Si’s entrance interrupted the story. The old man was surprised to find company in the kitchen. “Wall, wall, I swan to glory!” He took off his straw hat and rubb",
+      "trailing_context": " handkerchief. “If ’tisn’t my helper come so soon. Harry-lad, it’s good for sore eyes to see you lookin’ so young, like there wa’n’t no sech thing ahead as old age.” Harold shook hands heartily as he exclaimed with his usual enthusiasm: “Old age! Indeed, sir, I don’t believe in it. All I have to do ..."
+    },
+    "book_b": {
+      "id": 67430,
+      "title": "Cricket",
+      "author": "Timlow, Elizabeth Weston",
+      "leading_context": "...ke us, too—oh, bother! these children.” The heavy team lumbered in sight, drawn by big, black oxen. Old Thomas was plodding along by their side, occasionally cracking the long lash of his goad around their patient heads. Will and Archie stood in the cart. Thomas stopped his team in the shade and wip",
+      "trailing_context": ". “Ruther a warmish day,” he remarked, as if it were a new discovery. “Where are you going?” chorused the children. “Down to the cider mill,” answered Will, briskly. “Come, get up, Tummas.” “Oh, dear!” grumbled Eunice, “you boys can go everywhere, and have piles of fun, and we’ve got to stay here an..."
     }
   }
 ]
