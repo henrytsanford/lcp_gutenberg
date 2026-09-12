@@ -93,6 +93,8 @@ _HTML_VERSION_NOTE_RE = re.compile(
     r"\([^)]*\)\s+or\s+\([^)]*\)\s*"
 )
 
+_WHITESPACE_NORMALIZE_RE = re.compile(r"\s+")
+
 def clean_text(id):
     """Given the ID# of a text, return the text without headers."""
     update_cache_settings()
@@ -108,6 +110,10 @@ def clean_text(id):
     # Many texts also carry a leading transcriber's note pointing to an HTML
     # version with illustrations; not part of the book, so drop it too.
     final_book = _HTML_VERSION_NOTE_RE.sub("", final_book, count=1)
+    # Gutenberg texts are hard-wrapped, so the same sentence can have a
+    # line break in one edition where another has a plain space; collapse
+    # all whitespace runs so line-wrap position doesn't break LCS matches.
+    final_book = _WHITESPACE_NORMALIZE_RE.sub(" ", final_book)
     return final_book.lstrip()
 
 def get_ID(title):

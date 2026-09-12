@@ -269,6 +269,11 @@
 
   if (form) {
     form.addEventListener("submit", function () {
+      document.querySelectorAll("input[data-autocomplete]").forEach(function (el) {
+        if (!el.value.trim() && el.placeholder) {
+          el.value = el.placeholder;
+        }
+      });
       submitBtn.disabled = true;
       submitBtn.setAttribute("aria-busy", "true");
       submitBtn.value = "Searching…";

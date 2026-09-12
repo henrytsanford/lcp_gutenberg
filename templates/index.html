@@ -39,13 +39,11 @@
                 <h2>&ldquo;{{ subseq }}&rdquo;</h2>
                 <div class="context-grid" id="context_box">
                     <article class="context-card">
-                        <h3 class="context-card__title">{{ a_title }}</h3>
-                        {% if a_id %}<p class="context-card__meta"><a href="https://www.gutenberg.org/ebooks/{{ a_id }}" target="_blank" rel="noopener">View on Project Gutenberg &#8599;</a></p>{% endif %}
+                        <h3 class="context-card__title">{% if a_id %}<a href="https://www.gutenberg.org/ebooks/{{ a_id }}" target="_blank" rel="noopener">{{ a_title }}</a>{% else %}{{ a_title }}{% endif %}</h3>
                         <p class="context-card__text">{{ a_leading_context }}<mark>{{ subseq }}</mark>{{ a_trailing_context }}</p>
                     </article>
                     <article class="context-card">
-                        <h3 class="context-card__title">{{ b_title }}</h3>
-                        {% if b_id %}<p class="context-card__meta"><a href="https://www.gutenberg.org/ebooks/{{ b_id }}" target="_blank" rel="noopener">View on Project Gutenberg &#8599;</a></p>{% endif %}
+                        <h3 class="context-card__title">{% if b_id %}<a href="https://www.gutenberg.org/ebooks/{{ b_id }}" target="_blank" rel="noopener">{{ b_title }}</a>{% else %}{{ b_title }}{% endif %}</h3>
                         <p class="context-card__text">{{ b_leading_context }}<mark>{{ subseq }}</mark>{{ b_trailing_context }}</p>
                     </article>
                 </div>

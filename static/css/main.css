@@ -259,6 +259,16 @@ input[type=submit][disabled] {
   font-size: 1rem;
 }
 
+.context-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.context-card__title a:hover,
+.context-card__title a:focus-visible {
+  text-decoration: underline;
+}
+
 .context-card__text {
   margin: 0;
   padding: var(--space-3);
