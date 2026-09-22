@@ -36,6 +36,10 @@
                 <div class="notice notice--error" role="alert">
                     Couldn't find a match for one or both titles &mdash; check the spelling and try again.
                 </div>
+            {% elif subseq == "Error, texts too long" %}
+                <div class="notice notice--error" role="alert">
+                    Those two books are too long to compare together &mdash; try a shorter one.
+                </div>
             {% else %}
                 <h2>&ldquo;{{ subseq }}&rdquo;</h2>
                 <div class="context-grid" id="context_box">

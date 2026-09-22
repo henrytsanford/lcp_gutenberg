@@ -1,5 +1,7 @@
 import time
 
+import pytest
+
 import lcp_gutenberg as lg
 
 
@@ -138,3 +140,14 @@ def test_get_lcs_invalid_title_returns_error_tuple(monkeypatch):
     result = lg.get_lcs("nonexistent a", "nonexistent b")
 
     assert result == ("Error, invalid title(s)", "", "", "", "")
+
+
+def test_get_lcs_rejects_texts_over_length_cap(monkeypatch):
+    monkeypatch.setattr(lg, "MAX_COMBINED_TEXT_LENGTH", 100)
+    monkeypatch.setattr(lg, "get_ID", lambda title: {"a": 1, "b": 2}[title])
+    monkeypatch.setattr(lg, "clean_text", lambda id: "x" * 51)
+    monkeypatch.setattr(lg, "build_match_context", lambda a, b: pytest.fail("lcs should not run"))
+
+    result = lg.get_lcs("a", "b")
+
+    assert result == ("Error, texts too long", "", "", "", "")
