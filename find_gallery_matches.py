@@ -82,7 +82,7 @@ SAMPLE_SEED = 42               # fixed, so reruns (and smoke tests) draw a consi
 # multi-hour outlier. Capping combined length bounds that worst case; the
 # cap is generous enough to exclude only the most extreme tail (well under
 # 1% of a random sample) of combined lengths.
-MAX_COMBINED_TEXT_LENGTH = 4_000_000
+MAX_COMBINED_TEXT_LENGTH = lcp_gutenberg.MAX_COMBINED_TEXT_LENGTH
 TEXT_CACHE_SIZE = 32
 # Each worker's suffix-array build on a large pair briefly needs several
 # n-sized int64 arrays/lists; four such builds landing concurrently can spike

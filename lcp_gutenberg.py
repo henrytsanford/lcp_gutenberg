@@ -10,6 +10,7 @@ from gutenbergpy.gutenbergcachesettings import GutenbergCacheSettings
 
 DEFAULT_CACHE_DIR = "tmp" # Where to store compressed texts on Google Cloud
 CONTEXT_LENGTH = 300 # Number of characters on each side of LCP
+MAX_COMBINED_TEXT_LENGTH = 4_000_000 # Longer pairs can take lcs() minutes
 
 
 _WHITESPACE_RUN_RE = re.compile(r"\s{3,}")
@@ -114,6 +115,8 @@ def get_lcs(a_title, b_title):
             b_future = executor.submit(clean_text, b_code)
             a = a_future.result()
             b = b_future.result()
+        if len(a) + len(b) > MAX_COMBINED_TEXT_LENGTH:
+            return("Error, texts too long", "", "", "","")
         return build_match_context(a, b)
     else:
         return("Error, invalid title(s)", "", "", "","")
